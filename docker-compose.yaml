@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-
   db:
     image: postgres
     container_name: statisticsdb
@@ -12,3 +11,19 @@ services:
       - POSTGRES_PASSWORD=statisticspass
     ports:
       - "5432:5432"
+
+  api:
+    build: .
+    container_name: api
+    profiles: ["with_api"]
+    environment:
+      POSTGRES_HOST: 'statisticsdb'
+      POSTGRES_USERNAME: 'statisticsuser'
+      POSTGRES_DB_NAME: 'statisticsdb'
+      POSTGRES_PORT: '5432'
+      POSTGRES_PASSWORD: 'statisticspass'
+    ports:
+      - "8000:8000"
+    command: bash -c "sleep 5 && alembic upgrade head && python -m main"
+    depends_on:
+      - db

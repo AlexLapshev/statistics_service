@@ -4,7 +4,7 @@ from db.base import Base
 
 
 class Statistic(Base):
-    __tablename__ = 'statistics'
+    __tablename__ = "statistics"
 
     id = Column(Integer, primary_key=True)
     date = Column(Date, nullable=False, index=True, unique=True)

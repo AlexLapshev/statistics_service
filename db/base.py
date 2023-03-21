@@ -13,7 +13,9 @@ class Database(ABC):
 
     async def __call__(self) -> AsyncIterator[AsyncSession]:
         if not self.async_sessionmaker:
-            raise ValueError("async_sessionmaker not available. Run setup() first.")
+            raise ValueError(
+                "async_sessionmaker not available. Run setup() first."
+            )  # noqa
         async with self.async_sessionmaker() as session:
             async with session.begin():
                 yield session
@@ -24,16 +26,29 @@ class Database(ABC):
 
 
 def get_connection_string(driver: str = "asyncpg") -> str:
-    return f"postgresql+{driver}://{config.POSTGRES_USERNAME}:{config.POSTGRES_PASSWORD}@{config.POSTGRES_HOST}:{config.POSTGRES_PORT}/{config.POSTGRES_DB_NAME}"
+    if driver:
+        driver = f"+{driver}"
+    return (
+        f"postgresql{driver}://"
+        f"{config.POSTGRES_USERNAME}:"
+        f"{config.POSTGRES_PASSWORD}@"
+        f"{config.POSTGRES_HOST}:"
+        f"{config.POSTGRES_PORT}/"
+        f"{config.POSTGRES_DB_NAME}"
+    )
 
 
 class PostgresDatabase(Database):
-    def setup(self) -> None:
+    def setup(self, echo: Optional[bool] = None) -> None:
+        if echo is None:
+            echo = config.SQL_COMMAND_ECHO
         async_engine = create_async_engine(
             get_connection_string(),
-            echo=config.SQL_COMMAND_ECHO,
+            echo=echo,
         )
-        self.async_sessionmaker = sessionmaker(async_engine, class_=AsyncSession)  # type: ignore
+        self.async_sessionmaker = sessionmaker(  # type: ignore
+            bind=async_engine, class_=AsyncSession
+        )
 
 
 db = PostgresDatabase()

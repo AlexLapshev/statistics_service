@@ -1,12 +1,8 @@
-from typing import Union
-
 import uvicorn as uvicorn
-from fastapi import FastAPI, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import FastAPI
 
-from statistics.router import statistics_router
+from services.statistics.router import statistics_router
 from db.base import db
-from db.crud import StatisticsCrud
 
 app = FastAPI()
 app.include_router(statistics_router)
@@ -18,15 +14,9 @@ async def setup_db() -> None:
 
 
 @app.get("/")
-async def read_root(session: AsyncSession = Depends(db)):
-    a = await StatisticsCrud(session).get_statistic(1)
-    return {"Hello": "World"}
+async def read_root():
+    return {"message": "Hello from statistics service."}
 
 
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: Union[str, None] = None):
-#     return {"item_id": item_id, "q": q}
-
-
-if __name__ == '__main__':
-    uvicorn.run(app=app, port=8000, host='0.0.0.0')
+if __name__ == "__main__":
+    uvicorn.run(app=app, port=8000, host="0.0.0.0")
