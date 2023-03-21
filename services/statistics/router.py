@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from fastapi.params import Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import JSONResponse, Response
-from starlette.status import HTTP_200_OK, HTTP_422_UNPROCESSABLE_ENTITY
+from starlette.status import HTTP_200_OK, HTTP_422_UNPROCESSABLE_ENTITY, HTTP_404_NOT_FOUND
 
 from db.base import db
 from db.crud import StatisticsCrud
@@ -33,7 +33,7 @@ async def get_statistics(
 ) -> StatisticsAggregatedResponseSchema or JSONResponse:
     statistics = await StatisticsCrud(session).get(from_date, to_date, order_by, order)  # noqa
     if not statistics:
-        return JSONResponse(content={"message": "No statistics found"}, status_code=404)  # noqa
+        return JSONResponse(content={"message": "No statistics found"}, status_code=HTTP_404_NOT_FOUND)  # noqa
     aggregated_statistics = StatisticsAggregator(statistics).aggregate()
     return aggregated_statistics
 
