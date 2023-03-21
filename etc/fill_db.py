@@ -19,7 +19,12 @@ async def insert_100_statistics(session: AsyncSession) -> None:
             clicks=100,
             cost=Decimal(100),
         )
-        await StatisticsCrud(session).add(s)
+        try:
+            await StatisticsCrud(session).add(s)
+        except Exception as e:
+            if "ix_statistics_date" in e.args[0]:
+                raise Exception("DATES SHOULD BE UNIQUE, RESET THE DATABASE")
+            raise e
     s = StatisticsSchema(
         date=d + datetime.timedelta(days=100),
         views=37,
@@ -27,6 +32,7 @@ async def insert_100_statistics(session: AsyncSession) -> None:
         cost=Decimal("37.84"),
     )
     await StatisticsCrud(session).add(s)
+
     await session.commit()
     print("SUCCESSFULLY INSERTED 100 STATISTICS")
 

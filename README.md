@@ -24,6 +24,13 @@ Apply migrations
 alembic upgrade head
 ```
 
+To fill the database with dummy data use 
+
+```
+python -m etc.fill_db
+```
+
+
 To run the app 
 
 `python main.py`
