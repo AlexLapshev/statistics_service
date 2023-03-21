@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+
+  db:
+    image: postgres
+    container_name: statisticsdb
+    restart: always
+    environment:
+      - POSTGRES_DB=statisticsdb
+      - POSTGRES_USER=statisticsuser
+      - POSTGRES_PASSWORD=statisticspass
+    ports:
+      - "5432:5432"
