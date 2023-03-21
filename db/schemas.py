@@ -2,7 +2,7 @@ import datetime
 from _decimal import Decimal
 from typing import Optional
 
-from pydantic import BaseModel, condecimal, root_validator, ValidationError, validator
+from pydantic import BaseModel, condecimal, root_validator, validator
 
 
 class StatisticsSchema(BaseModel):
