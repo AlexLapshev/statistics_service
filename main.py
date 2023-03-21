@@ -2,25 +2,26 @@ from typing import Union
 
 import uvicorn as uvicorn
 from fastapi import FastAPI, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.config import engine, Base, async_session
+from statistics.router import statistics_router
+from db.base import db
 from db.crud import StatisticsCrud
-from db.schemas import StatisticSchema
 
 app = FastAPI()
+app.include_router(statistics_router)
+
+
+@app.on_event("startup")
+async def setup_db() -> None:
+    db.setup()
 
 
 @app.get("/")
-async def read_root():
-    async with async_session() as session:
-        async with session.begin():
-            await StatisticsCrud(session).get_statistic(1)
+async def read_root(session: AsyncSession = Depends(db)):
+    a = await StatisticsCrud(session).get_statistic(1)
     return {"Hello": "World"}
 
-
-@app.post("/statistics/")
-async def create_item(statistic: StatisticSchema, s: Depends()):
-    return statistic
 
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: Union[str, None] = None):

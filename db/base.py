@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Optional, AsyncIterator
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+
+from db.config import config
 
 
 class Database(ABC):
@@ -13,7 +15,8 @@ class Database(ABC):
         if not self.async_sessionmaker:
             raise ValueError("async_sessionmaker not available. Run setup() first.")
         async with self.async_sessionmaker() as session:
-            yield session
+            async with session.begin():
+                yield session
 
     @abstractmethod
     def setup(self) -> None:
@@ -30,4 +33,8 @@ class PostgresDatabase(Database):
             get_connection_string(),
             echo=config.SQL_COMMAND_ECHO,
         )
-        self.async_sessionmaker = sessionmaker(async_engine, class_=AsyncSession)
+        self.async_sessionmaker = sessionmaker(async_engine, class_=AsyncSession)  # type: ignore
+
+
+db = PostgresDatabase()
+Base = declarative_base()

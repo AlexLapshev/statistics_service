@@ -1,10 +1,3 @@
-# from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-# from sqlalchemy.orm import declarative_base, sessionmaker
-#
-# DATABASE_URL = "postgresql+asyncpg://statisticsuser:statisticspass@localhost:5432/statisticsdb"
-# engine = create_async_engine(DATABASE_URL, future=False, echo=True)
-# async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)  # type: ignore
-# Base = declarative_base()
 import os
 from abc import ABC
 
@@ -28,7 +21,7 @@ class DevelopmentConfig(Config):
 
 def get_config() -> Config:
     env = os.getenv("ENV") == "development"
-    if env == "development":
+    if env:
         return DevelopmentConfig()
     raise NotImplementedError
 
