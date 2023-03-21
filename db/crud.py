@@ -32,7 +32,9 @@ class StatisticsCrud:
         statistics = await self.db_session.execute(q)
         statistics = statistics.scalars().all()
         return [
-            StatisticsSchema(views=s.views, cost=s.cost, date=s.date, clicks=s.clicks)  # noqa
+            StatisticsSchema(
+                views=s.views, cost=s.cost, date=s.date, clicks=s.clicks
+            )  # noqa
             for s in statistics
         ]
 
