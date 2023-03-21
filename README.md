@@ -27,7 +27,7 @@ alembic upgrade head
 To fill the database with dummy data use 
 
 ```
-python -m etc.fill_db
+python -m etc.fill_db_random
 ```
 
 

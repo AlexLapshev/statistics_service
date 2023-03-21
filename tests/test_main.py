@@ -87,6 +87,50 @@ def test_sort_by_cost_desc():
     assert j.statistics[-1].cost == Decimal("37.84")
 
 
+def test_sort_by_clicks_asc():
+    j, s = make_request(f"/statistics/?order_by=cost&order=asc")
+    assert s == 200
+    assert j.statistics[0].clicks == 37
+
+
+def test_sort_by_clicks_desc():
+    j, s = make_request(f"/statistics/?order_by=cost&order=desc")
+    assert s == 200
+    assert j.statistics[-1].clicks == 37
+
+
+def test_sort_by_views_asc():
+    j, s = make_request(f"/statistics/?order_by=views&order=asc")
+    assert s == 200
+    assert j.statistics[0].views == 37
+
+
+def test_sort_by_views_desc():
+    j, s = make_request(f"/statistics/?order_by=views&order=desc")
+    assert s == 200
+    assert j.statistics[-1].views == 37
+
+
+def test_sort_by_views_asc_with_date():
+    d1 = FIRST_DAY + datetime.timedelta(days=99)
+    d2 = FIRST_DAY + datetime.timedelta(days=101)
+    j, s = make_request(f"/statistics/?from={d1}&to={d2}&?order_by=views&order=asc")
+    assert s == 200
+    assert len(j.statistics) == 2
+    assert j.statistics[0].views == 100
+    assert j.statistics[-1].views == 37
+
+
+def test_sort_by_views_desc_with_date():
+    d1 = FIRST_DAY + datetime.timedelta(days=99)
+    d2 = FIRST_DAY + datetime.timedelta(days=101)
+    j, s = make_request(f"/statistics/?from={d1}&to={d2}&?order_by=views&order=desc")
+    assert s == 200
+    assert len(j.statistics) == 2
+    assert j.statistics[0].views == 37
+    assert j.statistics[-1].views == 100
+
+
 def test_404():
     d1 = FIRST_DAY + datetime.timedelta(days=101)
     r = client.get(f"/statistics/?from={d1}")
@@ -129,4 +173,3 @@ def test_post_null():
     assert r.json()["clicks"] == 0
     assert r.json()["views"] == 0
     assert r.json()["cost"] == 0
-

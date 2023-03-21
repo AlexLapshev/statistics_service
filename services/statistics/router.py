@@ -34,23 +34,22 @@ async def get_statistics(
     statistics = await StatisticsCrud(session).get(from_date, to_date, order_by, order)  # noqa
     if not statistics:
         return JSONResponse(content={"message": "No statistics found"}, status_code=HTTP_404_NOT_FOUND)  # noqa
-    aggregated_statistics = StatisticsAggregator(statistics).aggregate()
-    return aggregated_statistics
+    return StatisticsAggregator(statistics).aggregate()
 
 
 @statistics_router.post("/")
 async def add_statistics(
         statistic: StatisticsSchema, session: AsyncSession = Depends(db)
 ) -> JSONResponse or StatisticsSchema:
-    s = await StatisticsCrud(session).add(statistic)
-    if not s:
+    statistics = await StatisticsCrud(session).add(statistic)
+    if not statistics:
         return JSONResponse(
             content={
                 "message": f"Statistics already exist for this day: {statistic.date}"  # noqa
             },
             status_code=HTTP_422_UNPROCESSABLE_ENTITY,
         )
-    return s
+    return statistics
 
 
 @statistics_router.put("/")

@@ -3,7 +3,7 @@ from typing import Optional, Literal
 
 from sqlalchemy import update
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncConnection
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from db.helpers import CrudHelperMixin
 from db.models import Statistic
@@ -11,8 +11,8 @@ from db.schemas import StatisticsSchema
 
 
 class StatisticsCrud:
-    def __init__(self, db_session):
-        self.db_session: AsyncConnection = db_session
+    def __init__(self, db_session: AsyncSession):
+        self.db_session = db_session
 
     async def get(
         self,

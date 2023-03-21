@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import random
 from _decimal import Decimal
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,12 +12,17 @@ from tests.test_main import FIRST_DAY
 
 
 async def insert_100_statistics(session: AsyncSession) -> None:
-    for i in range(1, 100):
+    random_days = []
+    random_day = random.randint(1, 365)
+    for i in range(1, 101):
+        while random_day in random_days:
+            random_day = random.randint(1, 365)
+        random_days.append(random_day)
         s = StatisticsSchema(
-            date=FIRST_DAY + datetime.timedelta(days=i),
-            views=100,
-            clicks=100,
-            cost=Decimal(100),
+            date=FIRST_DAY + datetime.timedelta(days=random_day),
+            views=random.randint(1000, 2000),
+            clicks=random.randint(100, 200),
+            cost=Decimal(f"{random.randint(100, 2000)}.{random.randint(1, 99)}"),
         )
         try:
             await StatisticsCrud(session).add(s)
@@ -24,13 +30,6 @@ async def insert_100_statistics(session: AsyncSession) -> None:
             if "ix_statistics_date" in e.args[0]:
                 raise Exception("DATES SHOULD BE UNIQUE, RESET THE DATABASE")
             raise e
-    s = StatisticsSchema(
-        date=FIRST_DAY + datetime.timedelta(days=100),
-        views=37,
-        clicks=37,
-        cost=Decimal("37.84"),
-    )
-    await StatisticsCrud(session).add(s)
 
     await session.commit()
     print("SUCCESSFULLY INSERTED 100 STATISTICS")
