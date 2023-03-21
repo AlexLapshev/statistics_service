@@ -1,5 +1,3 @@
-import datetime
-
 from db.schemas import (
     StatisticsSchema,
     StatisticsAggregatedResponseSchema,
@@ -17,7 +15,7 @@ class StatisticsAggregator:
         total_cost = sum([s.cost for s in self.statistics])
         total_cpc = total_cost / total_clicks if total_clicks else 0
         total_cpm = total_cost / total_views * 1000 if total_views else 0
-        aggregated_one_by_one = self.aggregate_one()
+        aggregated_one_by_one = self.aggregate_one_by_one()
         return StatisticsAggregatedResponseSchema(
             total_clicks=total_clicks,
             total_views=total_views,
@@ -27,7 +25,7 @@ class StatisticsAggregator:
             statistics=aggregated_one_by_one,
         )
 
-    def aggregate_one(self) -> list[StatisticsAggregatedSchema]:
+    def aggregate_one_by_one(self) -> list[StatisticsAggregatedSchema]:
         res = []
         for s in self.statistics:
             cpc = s.cost / s.clicks if s.clicks else 0
