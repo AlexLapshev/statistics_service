@@ -8,7 +8,7 @@ from starlette.responses import JSONResponse, Response
 from starlette.status import (
     HTTP_200_OK,
     HTTP_422_UNPROCESSABLE_ENTITY,
-    HTTP_404_NOT_FOUND,
+    HTTP_204_NO_CONTENT,
 )
 
 from db.base import db
@@ -39,9 +39,7 @@ async def get_statistics(
         from_date, to_date, order_by, order
     )  # noqa
     if not statistics:
-        return JSONResponse(
-            content={"message": "No statistics found"}, status_code=HTTP_404_NOT_FOUND
-        )  # noqa
+        return JSONResponse(content={}, status_code=HTTP_204_NO_CONTENT)
     return StatisticsAggregator(statistics).aggregate()
 
 

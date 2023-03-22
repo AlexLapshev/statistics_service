@@ -131,10 +131,10 @@ def test_sort_by_views_desc_with_date():
     assert j.statistics[-1].views == 100
 
 
-def test_404():
+def test_204():
     d1 = FIRST_DAY + datetime.timedelta(days=101)
     r = client.get(f"/statistics/?from={d1}")
-    assert r.status_code == 404
+    assert r.status_code == 204
 
 
 def test_reset():
@@ -143,7 +143,8 @@ def test_reset():
     r = client.put("/statistics")
     assert r.status_code == 200
     r = client.get("/statistics")
-    assert r.json()
+    assert r.status_code == 204
+    assert r.json() == {}
 
 
 def test_post():

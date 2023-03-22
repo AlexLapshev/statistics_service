@@ -24,6 +24,6 @@ services:
       POSTGRES_PASSWORD: 'statisticspass'
     ports:
       - "8000:8000"
-    command: bash -c "sleep 5 && alembic upgrade head && python -m main"
+    command: bash -c "sleep 2 && alembic upgrade head && python -m main"
     depends_on:
       - db
