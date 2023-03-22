@@ -56,7 +56,7 @@ def test_len_statistics_sort_from_date():
     assert s == 200
     assert len(j.statistics) == 50
     assert j.total_clicks == 4937
-    assert j.total_cpm == Decimal("1000.17")
+    assert j.average_cpm == Decimal("1000.17")
     assert j.total_views == 4937
 
 
@@ -67,7 +67,7 @@ def test_len_statistics_sort_from_to_date():
     assert s == 200
     assert len(j.statistics) == 30
     assert j.total_clicks == 3000
-    assert j.total_cpm == 1000
+    assert j.average_cpm == 1000
     assert j.total_views == 3000
     assert j.total_cost == 3000
     dates = [s.date for s in j.statistics]

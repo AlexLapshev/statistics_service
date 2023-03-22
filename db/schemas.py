@@ -45,6 +45,6 @@ class StatisticsAggregatedResponseSchema(BaseAggregated):
     total_clicks: int
     total_views: int
     total_cost: condecimal(decimal_places=2)
-    total_cpc: condecimal(decimal_places=2)
-    total_cpm: condecimal(decimal_places=2)
+    average_cpc: condecimal(decimal_places=2)
+    average_cpm: condecimal(decimal_places=2)
     statistics: list[StatisticsAggregatedSchema]

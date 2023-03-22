@@ -13,15 +13,15 @@ class StatisticsAggregator:
         total_clicks = sum([s.clicks for s in self.statistics])
         total_views = sum([s.views for s in self.statistics])
         total_cost = sum([s.cost for s in self.statistics])
-        total_cpc = total_cost / total_clicks if total_clicks else 0
-        total_cpm = total_cost / total_views * 1000 if total_views else 0
+        average_cpc = total_cost / total_clicks if total_clicks else 0
+        average_cpm = total_cost / total_views * 1000 if total_views else 0
         aggregated_one_by_one = self.aggregate_one_by_one()
         return StatisticsAggregatedResponseSchema(
             total_clicks=total_clicks,
             total_views=total_views,
             total_cost=total_cost,
-            total_cpc=total_cpc,
-            total_cpm=total_cpm,
+            average_cpc=average_cpc,
+            average_cpm=average_cpm,
             statistics=aggregated_one_by_one,
         )
 
