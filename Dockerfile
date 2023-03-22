@@ -4,8 +4,8 @@ RUN apt-get update \
     && apt-get -y install libpq-dev gcc \
     && pip install psycopg2
 
-COPY . .
-WORKDIR .
+COPY . ./app
+WORKDIR app
 
 RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
