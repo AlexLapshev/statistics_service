@@ -174,3 +174,22 @@ def test_post_null():
     assert r.json()["clicks"] == 0
     assert r.json()["views"] == 0
     assert r.json()["cost"] == 0
+
+
+def test_post_with_fp():
+    r = client.post("/statistics", json={
+        "date": "2012-03-22",
+        "views": 1.22,
+        "clicks": 1,
+        "cost": 1.22
+    })
+    assert r.status_code == 422
+    assert r.json()["detail"][0]["msg"] == "Not acceptable, views can't be a number with a floating point."
+    r = client.post("/statistics", json={
+        "date": "2012-03-22",
+        "views": 1,
+        "clicks": 1.22,
+        "cost": 1.22
+    })
+    assert r.status_code == 422
+    assert r.json()["detail"][0]["msg"] == "Not acceptable, clicks can't be a number with a floating point."

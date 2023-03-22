@@ -13,8 +13,11 @@ class StatisticsSchema(BaseModel):
 
     @root_validator(pre=True)
     def validate_values(cls, values):
-        for v in ["clicks", "views", "cost"]:
+        for v in ["clicks", "views"]:
+            if hasattr(values[v], "is_integer") and not values[v].is_integer():
+                raise ValueError(f"Not acceptable, {v} can't be a number with a floating point.")
             values[v] = values[v] if values[v] is not None else 0
+        values["cost"] = values["cost"] if values["cost"] is not None else 0
         return values
 
     @validator("date")
