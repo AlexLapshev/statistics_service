@@ -22,7 +22,9 @@ async def insert_100_statistics(session: AsyncSession) -> None:
             date=FIRST_DAY + datetime.timedelta(days=random_day),
             views=random.randint(1000, 2000),
             clicks=random.randint(100, 200),
-            cost=Decimal(f"{random.randint(100, 2000)}.{random.randint(1, 99)}"),
+            cost=Decimal(
+                f"{random.randint(100, 2000)}.{random.randint(1, 99)}"
+            ),
         )
         try:
             await StatisticsCrud(session).add(s)
