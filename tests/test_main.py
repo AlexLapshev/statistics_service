@@ -193,3 +193,13 @@ def test_post_with_fp():
     })
     assert r.status_code == 422
     assert r.json()["detail"][0]["msg"] == "Not acceptable, clicks can't be a number with a floating point."
+
+
+def test_post_greater_date():
+    r = client.post("/statistics", json={
+        "date": "2032-03-22",
+        "views": 1,
+        "clicks": 1,
+        "cost": 1
+    })
+    assert r.status_code == 422
